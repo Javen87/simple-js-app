@@ -21,9 +21,35 @@ let pokemonRepository = (function () {
       document.write('Not a Pokemmon Object');
     }
   }
+
+  //Function to filter pokemon by name
   function findByName(pokemonName){
     let filterResult = pokemonList.filter(pokemon => pokemon.name === pokemonName);
     console.log(`We found the Pokemon: ${filterResult[0].name}`);
+  }
+
+  //Function to add pokemen to the List for displaying
+  function addListItem(pokemon){
+    let listContainer = document.querySelector('ul');
+
+    let listItem = document.createElement('li');
+  
+    let button = document.createElement('button');
+    button.innerHTML = pokemon.name;
+    button.addEventListener('click', function() {
+      showDetails(pokemon)
+    });
+  
+    button.classList.add('list-button');
+  
+    listItem.appendChild(button);
+  
+    listContainer.appendChild(listItem);
+  }
+
+  //Function to show Pokemon when clicked
+  function showDetails(pokemon){
+    console.log(pokemon.name);
   }
 
   //Function to return all pokemon objects in the Array
@@ -34,6 +60,8 @@ let pokemonRepository = (function () {
   return {
     add: add,
     findByName: findByName,
+    addListItem: addListItem,
+    showDetails: showDetails,
     getAll: getAll
   }
 })();
@@ -41,16 +69,8 @@ let pokemonRepository = (function () {
 //Implementation of ForEach method to display all pokemon objects
 pokemonRepository.getAll().forEach(function(pokemon)
 {
-  //Conditional statement to ensure an adjective is printed for the biggest pokemon object
-  if (pokemon.height > 1.5)
-  {
-    document.write(`${pokemon.name} (Height: ${pokemon.height}) - Wow, that's BIG! <br>`);
-  }
-  else
-  {
-    document.write(`${pokemon.name} (Height: ${pokemon.height}) <br>`);
-  }
-  document.write("<br>");
+  pokemonRepository.addListItem(pokemon);
+  
 });
 
 
