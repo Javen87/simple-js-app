@@ -37,6 +37,7 @@ body
   transition-duration: 0.4s;
   background-color: white;
   border: 2px solid var(--primary-color);
+  min-width: 200px;
 }
 
 button:hover, button:focus
