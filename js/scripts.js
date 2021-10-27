@@ -21,16 +21,29 @@ let pokemonRepository = (function () {
 
   //Function to add pokemon objects to unordered list
   function addListItem(pokemon) {
+    
     let pokemonList = document.querySelector(".pokemon-list");
-    let listpokemon = document.createElement("li");
-    let button = document.createElement("button");
+
+    //Selecting the List Item Node and adding CSS classes
+    let listpokemon = document.createElement('li');
+   
+    //Creating button element for each pokemon
+    let button = document.createElement('button');
     button.innerText = pokemon.name;
-    button.classList.add("list-button");
-    listpokemon.appendChild(button);
-    pokemonList.appendChild(listpokemon);
+    button.classList.add('list-button', 'btn', 'btn-outline-primary', 'font-weight-bold');
+    
+    //Adding Event Listener to button for the modal using jQuery
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#pokemonModalContainer');
+
+    //Adding EventListener to Pokemon Button
     button.addEventListener("click", function() {
       showDetails(pokemon);
     });
+
+    //Adding the pokemon to the button and then as a List Item
+    listpokemon.appendChild(button);
+    pokemonList.appendChild(listpokemon);
   }
 
   //Function to fetch pokemon from API
@@ -69,54 +82,46 @@ let pokemonRepository = (function () {
 
   //Function to dispay pokemon details
   function showDetails(pokemonObject) {
-    pokemonRepository.loadDetails(pokemonObject).then(function () {
-      showModal(pokemonObject.name, pokemonObject.imageUrl, pokemonObject.height, pokemonObject.weight);
-      console.log(pokemonObject);
+    loadDetails(pokemonObject).then(function () {
+      showModal(pokemonObject);
     });
   }
 
-  //Function to create modal box for information
-  function showModal(name, imageUrl, height, weight){
-    
-    modalContainer.innerHTML = '';
+  //Function to create modal box to display Pokemon Information
+  function showModal(pokemonObject){
+    let modalTitle = document.querySelector('.modal-title');
+    let modalBody = document.querySelector('.modal-body');
 
-    let modal = document.createElement('div');
-    modal.classList.add('modal');
+    modalTitle.innerText = '';
+    modalBody.innerText = '';
 
-    let closeButtonElement = document.createElement('button');
-    closeButtonElement.classList.add('modal-close');
-    closeButtonElement.innerText = 'Close';
-    closeButtonElement.addEventListener('click', hideModal);
-
-    let titleElement = document.createElement('h1');
-    titleElement.innerText = name;
+    let nameElement = document.createElement('h1');
+    nameElement.innerText = pokemonObject.name;
 
     let imageElement = document.createElement('img');
-    imageElement.src = imageUrl;
+    imageElement.src = pokemonObject.imageUrl;
 
     let heightElement = document.createElement('p');
-    heightElement.innerText = 'Height: ' + height;
+    heightElement.innerText = 'Height: ' + pokemonObject.height;
 
     let weightElement = document.createElement('p');
-    weightElement.innerText = 'Weight: ' + weight;
+    weightElement.innerText = 'Weight: ' + pokemonObject.weight;
 
-    modalContainer.appendChild(modal);
-
-    modal.appendChild(closeButtonElement);
-    modal.appendChild(titleElement);
-    modal.appendChild(imageElement);
-    modal.appendChild(heightElement);
-    modal.appendChild(weightElement);
+    modalTitle.append(nameElement);
+    modalBody.append(imageElement);
+    modalBody.append(heightElement);
+    modalBody.append(weightElement);
 
     modalContainer.classList.add('is-visible');
-  }
 
+  }
+ 
   //Function to hide Modal Box
   function hideModal(){
     modalContainer.classList.remove('is-visible');
   }
 
-  //Function to add Click Event Listener to Modal Container
+  //Function to add Click Event Listener to close Modal Container
   modalContainer.addEventListener('click', (ev) =>{
     let target = ev.target;
     if(target === modalContainer){
@@ -124,7 +129,7 @@ let pokemonRepository = (function () {
     }
   });
 
-  //Function to add Event Listener for pressing the Escape Key
+  //Function to add Event Listener to close Modal after pressing the Escape Key
   window.addEventListener('keydown', (ev) => {
     if (ev.key === 'Escape' && modalContainer.classList.contains('is-visible')){
       hideModal();
